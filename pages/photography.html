@@ -4,34 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Photography — Hussain Ashfaque</title>
-  <meta name="description" content="Landscape photography by Hussain Ashfaque — capturing the quiet drama of natural environments." />
+  <meta name="description" content="Landscape and nature photography by Hussain Ashfaque." />
   <link rel="stylesheet" href="../css/main.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
   <style>
-    /* Photo placeholder gradients — replace with real <img> tags when you have photos */
-    .ph-1 { background: linear-gradient(135deg,#3D5A3E,#7A9E7E); height: 320px; }
-    .ph-2 { background: linear-gradient(160deg,#C4A882,#8B6355); height: 220px; }
-    .ph-3 { background: linear-gradient(135deg,#2C4A2D,#A8C5AC); height: 280px; }
-    .ph-4 { background: linear-gradient(160deg,#7A9E7E,#EDE0CE); height: 380px; }
-    .ph-5 { background: linear-gradient(135deg,#3A2E2A,#8B6355); height: 240px; }
-    .ph-6 { background: linear-gradient(160deg,#A8C5AC,#3D5A3E); height: 300px; }
-    .ph-7 { background: linear-gradient(135deg,#EDE0CE,#C4A882); height: 260px; }
-    .ph-8 { background: linear-gradient(160deg,#2C4A2D,#7A9E7E); height: 340px; }
-    .ph-9 { background: linear-gradient(135deg,#8B6355,#3A2E2A); height: 220px; }
-    .ph-10 { background: linear-gradient(160deg,#3D5A3E,#A8C5AC); height: 290px; }
-
-    .photo-placeholder-label {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 8px;
-      color: rgba(255,255,255,0.7);
-      font-family: var(--font-mono); font-size: 12px;
-      letter-spacing: 0.1em;
-      text-align: center;
-    }
-    .photo-placeholder-label span { font-size: 20px; }
+    .photo-gallery { columns: 3; column-gap: 20px; margin-top: 60px; }
+    @media(max-width:900px){ .photo-gallery { columns: 2; } }
+    @media(max-width:600px){ .photo-gallery { columns: 1; } }
+    .photo-item { break-inside: avoid; margin-bottom: 20px; border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; }
+    .photo-item img { width: 100%; display: block; transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94); }
+    .photo-item:hover img { transform: scale(1.04); }
+    .photo-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(44,74,45,0.8) 0%, transparent 50%); opacity: 0; transition: opacity 0.3s; display: flex; align-items: flex-end; padding: 20px; }
+    .photo-item:hover .photo-overlay { opacity: 1; }
+    .photo-overlay-text { color: white; font-size: 14px; font-family: var(--font-mono); letter-spacing: 0.05em; }
   </style>
 </head>
 <body>
@@ -51,113 +38,119 @@
     </button>
   </nav>
 
-  <!-- PAGE HEADER -->
   <header class="page-header">
     <div class="container">
-      <span class="section-tag">Landscape Photography</span>
+      <span class="section-tag">Landscape & Nature Photography</span>
       <h1>Through the <em>Lens</em></h1>
       <p>Captured stillness and the quiet drama of natural landscapes — the same eye for composition I bring to cloud architecture, pointed at the world.</p>
     </div>
   </header>
 
-  <!-- GALLERY -->
   <section class="section">
     <div class="container">
-
-      <!-- HOW TO ADD REAL PHOTOS:
-           Replace each .photo-placeholder div with:
-           <div class="photo-item" data-src="path/to/your/image.jpg">
-             <img src="path/to/your/image.jpg" alt="Description" loading="lazy" />
-             <div class="photo-overlay"><p class="photo-overlay-text">Location Name</p></div>
-           </div>
-
-           For S3-hosted images, use:
-           data-src="https://your-bucket.s3.amazonaws.com/photos/image.jpg"
-           src="https://your-bucket.s3.amazonaws.com/photos/image.jpg"
-      -->
-
       <div class="photo-gallery fade-up">
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-1" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🏔️</span>Upload your photo here<br/>Mountain Landscape</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Mountain Range</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-01.JPEG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-01.JPEG" alt="Ancient Forest" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Ancient Forest</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-2" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🌅</span>Upload your photo here<br/>Golden Hour</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Golden Hour</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-02.JPEG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-02.JPEG" alt="City Lake" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">City Lake</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-3" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🌲</span>Upload your photo here<br/>Forest Scene</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Forest Trail</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-03.JPEG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-03.JPEG" alt="Sequoia Giants" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Sequoia Giants</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-4" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🌊</span>Upload your photo here<br/>Coastal View</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Coastal Vista</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-05.JPEG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-05.JPEG" alt="Looking Up" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Looking Up</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-5" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🌄</span>Upload your photo here<br/>Valley View</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Valley Floor</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-06.jpg">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-06.jpg" alt="Golden Light" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Golden Light</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-6" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🏞️</span>Upload your photo here<br/>National Park</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">National Park</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-07.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-07.JPG" alt="Bay Area Aerial" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Bay Area Aerial</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-7" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🌾</span>Upload your photo here<br/>Open Fields</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Open Fields</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-08.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-08.JPG" alt="Golden Gate" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Golden Gate</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-8" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🌿</span>Upload your photo here<br/>Nature Detail</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Nature Detail</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-09.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-09.JPG" alt="Forest Arch" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Forest Arch</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-9" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>🌙</span>Upload your photo here<br/>Twilight Scene</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Twilight</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-10.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-10.JPG" alt="Tall Pines" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Tall Pines</p></div>
         </div>
 
-        <div class="photo-item" style="position:relative;overflow:hidden;border-radius:12px;margin-bottom:20px;cursor:pointer">
-          <div class="ph-10" style="border-radius:12px;position:relative;">
-            <div class="photo-placeholder-label"><span>☁️</span>Upload your photo here<br/>Sky & Clouds</div>
-          </div>
-          <div class="photo-overlay"><p class="photo-overlay-text">Big Sky</p></div>
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-11.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-11.JPG" alt="Mountain Valley" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Mountain Valley</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-12.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-12.JPG" alt="Coastal Cliffs" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Coastal Cliffs</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-13.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-13.JPG" alt="The Lighthouse" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">The Lighthouse</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-14.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-14.JPG" alt="Urban Park" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Urban Park</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-15.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-15.JPG" alt="City Skyline" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">City Skyline</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-16.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-16.JPG" alt="Manhattan Dusk" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Manhattan Dusk</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-17.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-17.JPG" alt="Glass Garden" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Glass Garden</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-18.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-18.JPG" alt="Horseshoe Bend" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Horseshoe Bend</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-19.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-19.JPG" alt="Pacific Coast" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Pacific Coast</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-20.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-20.JPG" alt="Lakeside Retreat" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Lakeside Retreat</p></div>
+        </div>
+
+        <div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-21.JPG">
+          <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-21.JPG" alt="Waterfall Vista" loading="lazy" />
+          <div class="photo-overlay"><p class="photo-overlay-text">Waterfall Vista</p></div>
         </div>
 
       </div>
-
-      <!-- Note for Hussain -->
-      <div style="margin-top:48px;padding:28px 32px;background:var(--sage-pale);border-radius:var(--radius);border:1px dashed var(--border-dark)" class="fade-up">
-        <p style="font-family:var(--font-mono);font-size:13px;color:var(--moss);margin:0">
-          <strong>📸 To add your photos:</strong> Replace placeholder divs in photography.html with your real image files.<br/>
-          Host them in your S3 bucket at <code>https://your-bucket.s3.amazonaws.com/photos/</code> — update the <code>src</code> and <code>data-src</code> attributes accordingly.
-        </p>
-      </div>
-
     </div>
   </section>
 
@@ -169,13 +162,12 @@
     </div>
   </div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="container">
       <div class="footer-inner">
         <div class="footer-left">
           <a href="../index.html" class="footer-logo">H·A</a>
-          <p class="footer-tagline">Cloud Engineer & Landscape Photographer<br/>San Francisco, CA</p>
+          <p class="footer-tagline">Cloud Engineer & Photographer<br/>San Francisco, CA</p>
         </div>
         <div class="footer-links">
           <a href="aws.html">Cloud Projects</a>
