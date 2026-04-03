@@ -60,29 +60,42 @@ const contactForm = document.getElementById('contact-form');
 if (contactForm) {
   contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const btn = contactForm.querySelector('.form-submit');
     btn.textContent = 'Sending...';
     btn.disabled = true;
 
     const data = {
-      name:    contactForm.name.value,
-      email:   contactForm.email.value,
+      name: contactForm.name.value,
+      email: contactForm.email.value,
       subject: contactForm.subject?.value || 'Portfolio Contact',
       message: contactForm.message.value,
     };
 
-    // AWS SES endpoint (replace with your API Gateway URL)
-    const API_ENDPOINT = 'YOUR_API_GATEWAY_ENDPOINT';
+    const API_ENDPOINT = 'https://e4c2gvm2b7gc7opbhcefxey5vu0cjfbi.lambda-url.us-west-1.on.aws/';
 
     try {
-      // For now, simulate success (replace with real API call)
-      await new Promise(r => setTimeout(r, 1200));
+      const response = await fetch(API_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || 'Something went wrong');
+      }
+
       document.getElementById('form-success').classList.add('show');
       contactForm.style.display = 'none';
     } catch (err) {
       btn.textContent = 'Send Message';
       btn.disabled = false;
       alert('Something went wrong. Please try again or email me directly at nain.ashee@gmail.com');
+      console.error('Contact form error:', err);
     }
   });
 }
