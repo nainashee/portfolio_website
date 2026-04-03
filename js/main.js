@@ -72,7 +72,7 @@ if (contactForm) {
       message: contactForm.message.value,
     };
 
-    const API_ENDPOINT = 'https://e4c2gvm2b7gc7opbhcefxey5vu0cjfbi.lambda-url.us-west-1.on.aws/';
+    const API_ENDPOINT = 'https://ciljng46smtmltekrssvzdi7p40wppmu.lambda-url.us-west-1.on.aws/';
 
     try {
       const response = await fetch(API_ENDPOINT, {
