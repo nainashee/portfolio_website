@@ -465,27 +465,35 @@ em { font-style: italic; color: var(--moss); }
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
-
-/* Wrapper divs — no fixed height, just rounded corners + subtle bg */
 .photo-placeholder {
   border-radius: var(--radius);
   overflow: hidden;
-  background: rgba(0,0,0,0.25);
+  background: rgba(0,0,0,0.4);
   transition: transform 0.3s var(--ease);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .photo-placeholder:hover { transform: scale(1.02); }
-
-/* Top photo spans full width */
-.p1 { grid-column: 1 / -1; }
-
-/* Images: full width, natural height — no cropping */
+/* Top photo: full width, taller */
+.p1 { grid-column: 1 / -1; height: 280px; }
+/* Bottom two: equal height side by side */
+.p2, .p3 { height: 200px; }
+/* Full photo always visible — no cropping */
 .teaser-img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: contain;
   display: block;
   transition: transform 0.4s var(--ease);
 }
 .photo-placeholder:hover .teaser-img { transform: scale(1.03); }
+/* Mobile: stack vertically */
+@media (max-width: 640px) {
+  .photo-teaser-grid { grid-template-columns: 1fr; }
+  .p1 { grid-column: 1; height: 220px; }
+  .p2, .p3 { height: 180px; }
+}
 
 /* ══════════════════════════════════════════════
    WALLPAPER CTA
