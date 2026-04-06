@@ -2,8 +2,22 @@
 
 A multi-page portfolio website showcasing cloud engineering projects, landscape photography, and free iOS wallpapers. Built with vanilla HTML/CSS/JS — earthy, nature-inspired design.
 
-**Live URL:** *(add your CloudFront/S3 URL here)*  
+**Live URL:** [hussainashfaque.com](https://hussainashfaque.com)  
+**CloudFront:** `https://dr7d2fsy81lyi.cloudfront.net`  
 **GitHub:** [github.com/nainashee](https://github.com/nainashee)
+
+---
+
+## Pages
+
+| Page | File | Description |
+|------|------|-------------|
+| Home | `index.html` | Hero, featured projects, photography teaser, wallpaper CTA, tech stack |
+| Cloud Projects | `pages/aws.html` | 6 AWS projects with GitHub links |
+| Photography | `pages/photography.html` | 20-photo masonry gallery with lightbox |
+| iOS Wallpapers | `pages/wallpapers.html` | 15 architectural wallpapers, free download |
+| About | `pages/about.html` | Bio, highlights, profile photo |
+| Contact | `pages/contact.html` | Contact form wired to AWS Lambda + SES |
 
 ---
 
@@ -11,184 +25,103 @@ A multi-page portfolio website showcasing cloud engineering projects, landscape 
 
 ```
 portfolio/
-├── index.html              # Home page
+├── index.html
 ├── css/
-│   └── main.css            # Full design system (earthy palette, animations)
+│   └── main.css            # Full design system — earthy palette, animations, responsive
 ├── js/
 │   └── main.js             # Scroll animations, nav, contact form, lightbox
 ├── pages/
-│   ├── aws.html            # Cloud Projects (6 AWS projects)
-│   ├── photography.html    # Landscape photo gallery + lightbox
-│   ├── wallpapers.html     # iOS wallpaper downloads
-│   ├── about.html          # About me
-│   └── contact.html        # Contact form (AWS SES ready)
+│   ├── aws.html
+│   ├── photography.html
+│   ├── wallpapers.html
+│   ├── about.html
+│   └── contact.html
 └── README.md
 ```
 
 ---
 
-## Deployment on AWS (Recommended: S3 + CloudFront)
+## Live Infrastructure
 
-### Step 1 — Create S3 Bucket
+### S3 Buckets
 
-```bash
-aws s3 mb s3://hussain-portfolio --region us-east-1
+| Bucket | Purpose |
+|--------|---------|
+| `hussain-portfolio-website` | Static site files (HTML, CSS, JS) + media assets |
 
-# Enable static website hosting
-aws s3 website s3://hussain-portfolio \
-  --index-document index.html \
-  --error-document index.html
+### CloudFront
+
+- **Distribution:** `dr7d2fsy81lyi.cloudfront.net`
+- **Origin:** `hussain-portfolio-website` S3 bucket
+- **HTTPS:** Enabled (redirect HTTP → HTTPS)
+- **Compression:** Enabled
+- **Cache invalidation path:** `/*`
+
+### Media Asset URLs
+
+```
+Photos:     https://dr7d2fsy81lyi.cloudfront.net/photos/photo-01.JPEG
+Wallpapers: https://dr7d2fsy81lyi.cloudfront.net/wallpapers/IMG_7615.JPG
+Profile:    https://dr7d2fsy81lyi.cloudfront.net/profile.png
 ```
 
-### Step 2 — Set Bucket Policy (Public Read)
+### Contact Form
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Principal": "*",
-    "Action": "s3:GetObject",
-    "Resource": "arn:aws:s3:::hussain-portfolio/*"
-  }]
-}
+```
+Form (contact.html) → Lambda URL → SES → nain.ashee@gmail.com
 ```
 
-```bash
-aws s3api put-bucket-policy \
-  --bucket hussain-portfolio \
-  --policy file://bucket-policy.json
+Lambda endpoint configured in `js/main.js`:
+```js
+const API_ENDPOINT = 'https://ciljng46smtmltekrssvzdi7p40wppmu.lambda-url.us-west-1.on.aws/';
 ```
 
-### Step 3 — Upload Site Files
+---
 
-```bash
-aws s3 sync . s3://hussain-portfolio \
-  --exclude ".git/*" \
-  --exclude "README.md" \
-  --exclude "*.DS_Store" \
+## Deployment
+
+### Upload Site Files to S3
+
+```powershell
+# Switch to production profile (PowerShell)
+$env:AWS_PROFILE = "production"
+
+# Sync all files
+aws s3 sync . s3://hussain-portfolio-website `
+  --exclude ".git/*" `
+  --exclude "README.md" `
+  --exclude "*.DS_Store" `
   --cache-control "max-age=86400"
 ```
 
-### Step 4 — CloudFront Distribution
-
-1. Go to AWS Console → CloudFront → Create Distribution
-2. Origin: your S3 bucket website endpoint (NOT the S3 REST endpoint)
-3. Enable HTTPS redirect
-4. Default root object: `index.html`
-5. Set custom error pages: 404 → `/index.html` (status 200)
-6. Deploy and note your `.cloudfront.net` URL
-
-### Step 5 — Custom Domain (when ready)
-
-1. Register domain in Route 53 (or transfer from registrar)
-2. Request ACM certificate (us-east-1 region — required for CloudFront)
-3. Add CloudFront alternate domain name
-4. Create Route 53 A record → alias to CloudFront distribution
-
----
-
-## Assets: S3 Bucket for Photos & Wallpapers
-
-Create a separate S3 bucket for media assets with CloudFront:
+### Invalidate CloudFront Cache (required after every deploy)
 
 ```bash
-aws s3 mb s3://hussain-portfolio-assets --region us-east-1
+aws cloudfront create-invalidation \
+  --distribution-id <YOUR_DISTRIBUTION_ID> \
+  --paths "/*"
 ```
 
-Structure:
-```
-hussain-portfolio-assets/
-├── photos/
-│   ├── landscape-01.jpg
-│   ├── landscape-02.jpg
-│   └── ...
-└── wallpapers/
-    ├── wallpaper-01.jpg   (1290×2796 for iPhone 14 Pro)
-    ├── wallpaper-02.jpg
-    └── ...
-```
+> Always run an invalidation after uploading — otherwise CloudFront serves stale cached files to visitors worldwide.
 
-Set CORS policy for wallpaper downloads:
-
-```json
-[{
-  "AllowedHeaders": ["*"],
-  "AllowedMethods": ["GET"],
-  "AllowedOrigins": ["https://your-domain.com"],
-  "ExposeHeaders": ["Content-Disposition"]
-}]
-```
-
-Then update image `src` and `data-src` attributes in `photography.html` and `wallpapers.html` with your CloudFront URLs:
-```
-https://your-assets-cf.cloudfront.net/photos/landscape-01.jpg
-https://your-assets-cf.cloudfront.net/wallpapers/wallpaper-01.jpg
-```
-
----
-
-## Contact Form — AWS SES Setup
-
-The contact form (contact.html) sends to `nain.ashee@gmail.com` via AWS SES.
-
-### Architecture
-```
-Form → API Gateway → Lambda → SES → nain.ashee@gmail.com
-```
-
-### Setup Steps
-
-1. **Verify email in SES:**
-   ```bash
-   aws ses verify-email-identity --email-address nain.ashee@gmail.com
-   ```
-
-2. **Create Lambda function** (Python):
-   ```python
-   import boto3, json
-   ses = boto3.client('ses', region_name='us-east-1')
-
-   def handler(event, context):
-       body = json.loads(event['body'])
-       ses.send_email(
-           Source='nain.ashee@gmail.com',
-           Destination={'ToAddresses': ['nain.ashee@gmail.com']},
-           Message={
-               'Subject': {'Data': f"Portfolio Contact: {body['subject']}"},
-               'Body': {'Text': {'Data': f"From: {body['name']} <{body['email']}>\n\n{body['message']}"}}
-           }
-       )
-       return {
-           'statusCode': 200,
-           'headers': {'Access-Control-Allow-Origin': '*'},
-           'body': json.dumps({'success': True})
-       }
-   ```
-
-3. **Create API Gateway** → POST `/contact` → Lambda
-4. **Update** `API_ENDPOINT` in `js/main.js` with your API Gateway URL
-
----
-
-## Local Development
+### Upload a Single File
 
 ```bash
-# Clone your repo
-git clone https://github.com/nainashee/portfolio.git
-cd portfolio
+# Example: updating main.css only
+aws s3 cp css/main.css s3://hussain-portfolio-website/css/main.css \
+  --cache-control "max-age=86400"
 
-# Serve locally (Python)
-python3 -m http.server 8080
-
-# Visit: http://localhost:8080
+# Then invalidate
+aws cloudfront create-invalidation --distribution-id <ID> --paths "/*"
 ```
 
 ---
 
-## GitHub Actions — Auto-Deploy to S3
+## GitHub Actions — Auto-Deploy
 
-Create `.github/workflows/deploy.yml`:
+Every push to `main` automatically syncs to S3 and invalidates CloudFront.
+
+**Workflow file:** `.github/workflows/deploy.yml`
 
 ```yaml
 name: Deploy to S3
@@ -206,41 +139,132 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          aws-region: us-west-1
       - name: Sync to S3
-        run: aws s3 sync . s3://hussain-portfolio --delete --exclude ".git/*" --exclude "README.md"
+        run: |
+          aws s3 sync . s3://hussain-portfolio-website \
+            --delete \
+            --exclude ".git/*" \
+            --exclude "README.md" \
+            --exclude "*.DS_Store"
       - name: Invalidate CloudFront
-        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} --paths "/*"
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CF_DISTRIBUTION_ID }} \
+            --paths "/*"
 ```
 
-Add secrets to GitHub repo: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `CF_DISTRIBUTION_ID`
+**Required GitHub Secrets:**
+
+| Secret | Description |
+|--------|-------------|
+| `AWS_ACCESS_KEY_ID` | Access key for IAM user `github-actions-deploy` |
+| `AWS_SECRET_ACCESS_KEY` | Secret key for IAM user `github-actions-deploy` |
+| `CF_DISTRIBUTION_ID` | Your CloudFront distribution ID |
+
+---
+
+## Local Development
+
+```bash
+git clone https://github.com/nainashee/portfolio.git
+cd portfolio
+
+# Serve locally
+python3 -m http.server 8080
+# Visit: http://localhost:8080
+```
+
+> The contact form calls the live Lambda URL so it won't work locally. All other pages work fully offline.
 
 ---
 
 ## Adding Content
 
-### Add Photography
-In `pages/photography.html`, replace each placeholder div with:
+### Add a Photo (`photography.html`)
+
 ```html
-<div class="photo-item" data-src="https://your-cf.cloudfront.net/photos/photo.jpg">
-  <img src="https://your-cf.cloudfront.net/photos/photo.jpg" alt="Landscape description" loading="lazy" />
+<div class="photo-item" data-src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-22.JPG">
+  <img src="https://dr7d2fsy81lyi.cloudfront.net/photos/photo-22.JPG" alt="Description" loading="lazy" />
   <div class="photo-overlay"><p class="photo-overlay-text">Location Name</p></div>
 </div>
 ```
 
-### Add Wallpapers
-In `pages/wallpapers.html`, update each wallpaper card:
+Upload to S3:
+```bash
+aws s3 cp photo-22.JPG s3://hussain-portfolio-website/photos/photo-22.JPG
+```
+
+### Add a Wallpaper (`wallpapers.html`)
+
 ```html
 <div class="wallpaper-card">
-  <img class="wallpaper-preview" src="https://your-cf.cloudfront.net/wallpapers/wp-01.jpg" alt="Wallpaper name" />
-  <span class="wallpaper-name">Forest Dusk</span>
+  <img class="wallpaper-preview" src="https://dr7d2fsy81lyi.cloudfront.net/wallpapers/IMG_XXXX.JPG" alt="Wallpaper Name" loading="lazy" />
+  <span class="wallpaper-name">Wallpaper Name</span>
   <span class="wallpaper-badge">Free</span>
   <div class="wallpaper-download">
-    <a class="wallpaper-btn" data-src="https://your-cf.cloudfront.net/wallpapers/wp-01.jpg" data-name="hussain-forest-dusk.jpg">
-      ↓ Download
-    </a>
+    <a class="wallpaper-btn" href="https://dr7d2fsy81lyi.cloudfront.net/wallpapers/IMG_XXXX.JPG" download="hussain-wallpaper-name.jpg">↓ Download</a>
   </div>
 </div>
+```
+
+Upload to S3:
+```bash
+aws s3 cp IMG_XXXX.JPG s3://hussain-portfolio-website/wallpapers/IMG_XXXX.JPG
+```
+
+> Recommended wallpaper resolution: **1290×2796px** (iPhone 14 Pro / 15 Pro). Compress to under 500KB before uploading using [squoosh.app](https://squoosh.app).
+
+---
+
+## Mobile Compatibility
+
+Tested and optimised across all iOS and Android devices:
+
+| Fix | Detail |
+|-----|--------|
+| Wallpaper cards (iOS 14 and older) | Replaced `aspect-ratio` with `padding-top: 216.67%` — works on all iOS/Android versions |
+| Download button on touch | Always visible on touch screens; hover-reveal only on desktop via `@media (hover: hover) and (pointer: fine)` |
+| Project row layout | Collapses to clean 2-column layout on mobile (≤640px) instead of broken 4-column grid |
+| Android tap highlight | Removed grey flash with `-webkit-tap-highlight-color: transparent` |
+| `backdrop-filter` | Added `-webkit-backdrop-filter` prefix for older Android Chrome |
+| Wallpaper grid columns | 2 cols on small phones → 3 on mid-size → auto-fill on desktop |
+| Photo gallery columns | 3 cols → 2 (≤900px) → 1 (≤600px) |
+
+---
+
+## AWS Services Used
+
+| Service | Purpose |
+|---------|---------|
+| S3 | Static site hosting + media storage (photos, wallpapers) |
+| CloudFront | Global CDN, HTTPS, caching |
+| Route 53 | DNS and custom domain management |
+| Lambda | Serverless contact form backend |
+| SES | Email delivery for contact form |
+| IAM | Least-privilege roles for deploy user and Lambda |
+| CloudTrail | Audit logging across the account |
+| GuardDuty | Threat detection |
+| Security Hub | Security posture monitoring |
+| Budgets | Cost alerts |
+
+---
+
+## AWS Account
+
+| Detail | Value |
+|--------|-------|
+| Account ID | `989126024881` |
+| IAM Admin User | `hussain-admin` |
+| AWS CLI Profile | `production` |
+| Primary Region | `us-west-1` |
+
+```powershell
+# Switch to production profile in PowerShell
+$env:AWS_PROFILE = "production"
+
+# Verify active identity
+aws sts get-caller-identity
 ```
 
 ---
@@ -248,14 +272,14 @@ In `pages/wallpapers.html`, update each wallpaper card:
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|-------|------------|
 | Frontend | HTML5, CSS3, Vanilla JS |
-| Fonts | Cormorant Garamond + DM Sans + DM Mono |
+| Fonts | Cormorant Garamond · DM Sans · DM Mono (Google Fonts) |
 | Hosting | AWS S3 + CloudFront |
-| Media CDN | AWS S3 + CloudFront |
-| Contact | AWS API Gateway + Lambda + SES |
-| CI/CD | GitHub Actions |
-| IaC (optional) | Terraform |
+| Media CDN | AWS CloudFront (`dr7d2fsy81lyi.cloudfront.net`) |
+| Contact | AWS Lambda + SES |
+| CI/CD | GitHub Actions → S3 sync + CloudFront invalidation |
+| DNS | AWS Route 53 |
 
 ---
 
