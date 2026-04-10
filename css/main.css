@@ -701,40 +701,45 @@ em { font-style: italic; color: var(--moss); }
    PHOTOGRAPHY PAGE
 ══════════════════════════════════════════════ */
 .photo-gallery {
-  columns: 3;
-  column-gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
   margin-top: 60px;
 }
-.photo-item {
-  break-inside: avoid;
-  margin-bottom: 20px;
+.photo-gallery .photo-item {
   border-radius: var(--radius);
   overflow: hidden;
   position: relative;
   cursor: pointer;
+  aspect-ratio: 4 / 5;
+  min-height: 320px;
+  display: flex;
+  align-items: stretch;
 }
 .photo-item img {
   width: 100%;
+  height: 100%;
+  object-fit: cover;
   display: block;
   transition: transform 0.5s var(--ease);
 }
-.photo-item-placeholder {
-  width: 100%; background: var(--sage-pale);
-  border-radius: var(--radius);
-  border: 1px dashed var(--border-dark);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--stone); font-size: 14px; font-family: var(--font-mono);
-}
-.photo-item:hover img, .photo-item:hover .photo-item-placeholder { transform: scale(1.04); }
+.photo-item:hover img { transform: scale(1.04); }
 .photo-overlay {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(44,74,45,0.8) 0%, transparent 50%);
+  background: linear-gradient(to top, rgba(44,74,45,0.8) 0%, transparent 55%);
   opacity: 0; transition: opacity 0.3s;
   display: flex; align-items: flex-end;
   padding: 20px;
 }
 .photo-item:hover .photo-overlay { opacity: 1; }
 .photo-overlay-text { color: var(--white); font-size: 14px; }
+
+@media(max-width:900px) {
+  .photo-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media(max-width:600px) {
+  .photo-gallery { grid-template-columns: 1fr; }
+}
 
 /* ══════════════════════════════════════════════
    WALLPAPERS PAGE
