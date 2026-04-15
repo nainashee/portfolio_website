@@ -541,6 +541,42 @@ em { font-style: italic; color: var(--moss); }
 .wallpaper-text p { margin-bottom: 32px; max-width: 440px; }
 
 /* ══════════════════════════════════════════════
+   HOWZAT CTA
+══════════════════════════════════════════════ */
+.howzat-cta { background: var(--bg-section); }
+.howzat-cta-inner {
+  display: flex; align-items: center;
+  gap: 80px;
+}
+.howzat-visual {
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.howzat-card {
+  width: 180px; height: 180px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  transition: transform var(--transition);
+}
+.howzat-cta-inner:hover .howzat-card { transform: rotate(3deg) translateY(-6px); }
+.howzat-silhouette { font-size: 72px; line-height: 1; filter: grayscale(1) brightness(0.3); }
+.howzat-card-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.howzat-text { flex: 1; }
+.howzat-text .section-title { margin-bottom: 16px; }
+.howzat-text p { margin-bottom: 32px; max-width: 440px; }
+
+/* ══════════════════════════════════════════════
    TECH STACK
 ══════════════════════════════════════════════ */
 .tech-stack { background: var(--bg-section); }
@@ -1017,6 +1053,8 @@ em { font-style: italic; color: var(--moss); }
   .footer-inner { grid-template-columns: 1fr; text-align: center; }
   .footer-social { align-items: center; flex-direction: row; justify-content: center; }
   .wallpaper-cta-inner { flex-direction: column; gap: 40px; text-align: center; }
+  .howzat-cta-inner { flex-direction: column; gap: 40px; text-align: center; }
+  .howzat-text p { max-width: 100%; }
   .photo-gallery { columns: 2; }
 }
   }
@@ -1065,6 +1103,8 @@ em { font-style: italic; color: var(--moss); }
   .footer-inner { grid-template-columns: 1fr; text-align: center; }
   .footer-social { align-items: center; flex-direction: row; justify-content: center; }
   .wallpaper-cta-inner { flex-direction: column; gap: 40px; text-align: center; }
+  .howzat-cta-inner { flex-direction: column; gap: 40px; text-align: center; }
+  .howzat-text p { max-width: 100%; }
   .photo-gallery { columns: 2; }
 }
 @media (max-width: 600px) {
