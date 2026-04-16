@@ -552,25 +552,60 @@ em { font-style: italic; color: var(--moss); }
   flex-shrink: 0;
   display: flex; align-items: center; justify-content: center;
 }
-.howzat-card {
-  width: 180px; height: 180px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+.howzat-thumb {
+  width: 220px; height: 220px;
   border-radius: var(--radius-lg);
+  background: #0f1a12;
+  position: relative;
+  overflow: hidden;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 12px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  align-items: center; justify-content: flex-end;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.22);
   transition: transform var(--transition);
 }
-.howzat-cta-inner:hover .howzat-card { transform: rotate(3deg) translateY(-6px); }
-.howzat-silhouette { font-size: 72px; line-height: 1; filter: grayscale(1) brightness(0.3); }
-.howzat-card-label {
+.howzat-cta-inner:hover .howzat-thumb { transform: rotate(-2deg) translateY(-6px); }
+.howzat-thumb-bg {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 60% 30%, #1a3a20 0%, #0f1a12 70%);
+}
+.howzat-thumb-dots {
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.howzat-thumb-player {
+  position: absolute;
+  bottom: 44px;
+  width: 90px;
+  color: #1a2e1d;
+  filter: drop-shadow(0 4px 16px rgba(0,0,0,0.5));
+  transition: transform var(--transition);
+}
+.howzat-cta-inner:hover .howzat-thumb-player { transform: translateY(-4px); }
+.howzat-thumb-label {
+  position: relative;
+  width: 100%;
+  padding: 10px 16px 14px;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex; flex-direction: column; gap: 2px;
+}
+.howzat-thumb-title {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #a8c5ac;
+  line-height: 1;
+}
+.howzat-thumb-title span { color: #5a9a6a; }
+.howzat-thumb-sub {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: rgba(168,197,172,0.5);
 }
 .howzat-text { flex: 1; }
 .howzat-text .section-title { margin-bottom: 16px; }
@@ -726,14 +761,14 @@ em { font-style: italic; color: var(--moss); }
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.06em;
-  color: #2d6a4f;
-  background: #d8f3dc;
-  border: 1px solid #b7e4c7;
+  color: #9b1c1c;
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
 }
 .live-dot {
   width: 6px; height: 6px;
   border-radius: 50%;
-  background: #40916c;
+  background: #ef4444;
   animation: live-pulse 1.8s ease-in-out infinite;
 }
 @keyframes live-pulse {
